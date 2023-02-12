@@ -47,6 +47,8 @@ using System.IO;
 using System.Text.Json;
 using System.Threading;
 using System.Text.RegularExpressions;
+using System.Collections.Specialized;
+using System.Web;
 
 namespace Cloud5mins.Function
 {
@@ -113,9 +115,14 @@ namespace Cloud5mins.Function
                     return badRequest;   
                 }
 
-                string pattern = @"^https?://(learn|azure)\.microsoft\.com$";
-                string replacement = "$0?ocid=AID3050101";
-                input.Url = Regex.Replace(input.Url, pattern, replacement);
+                input.Url = input.Url.Trim();
+                if(Regex.IsMatch(input.Url, @"^https?://(learn|azure)\.microsoft\.com$")){
+                    UriBuilder uriBuilder = new UriBuilder(input.Url);
+                    NameValueCollection query = HttpUtility.ParseQueryString(uriBuilder.Query);
+                    query["ocid"] = "AID3050101";
+                    uriBuilder.Query = query.ToString();
+                    input.Url = uriBuilder.ToString();
+                }
 
                 StorageTableHelper stgHelper = new StorageTableHelper(_adminApiSettings.UlsDataStorage);
 

@@ -33,6 +33,8 @@ using System.Text.RegularExpressions;
 
 using Cloud5mins.domain;
 using Cloud5mins.AzShortener;
+using System.Collections.Specialized;
+using System.Web;
 
 namespace Cloud5mins.Function
 {
@@ -102,10 +104,13 @@ namespace Cloud5mins.Function
                 StorageTableHelper stgHelper = new StorageTableHelper(_adminApiSettings.UlsDataStorage);
 
                 string longUrl = input.Url.Trim();
-                string pattern = @"^https?://(learn|azure)\.microsoft\.com$";
-                string replacement = "$0?ocid=AID3050101";
-                longUrl = Regex.Replace(longUrl, pattern, replacement);
-
+                if(Regex.IsMatch(longUrl, @"^https?://(learn|azure)\.microsoft\.com$")){
+                    UriBuilder uriBuilder = new UriBuilder(longUrl);
+                    NameValueCollection query = HttpUtility.ParseQueryString(uriBuilder.Query);
+                    query["ocid"] = "AID3050101";
+                    uriBuilder.Query = query.ToString();
+                    input.Url = uriBuilder.ToString();
+                }
                 string vanity = string.IsNullOrWhiteSpace(input.Vanity) ? "" : input.Vanity.Trim();
                 string title = string.IsNullOrWhiteSpace(input.Title) ? "" : input.Title.Trim();
 
