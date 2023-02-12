@@ -46,6 +46,7 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Text.Json;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 namespace Cloud5mins.Function
 {
@@ -111,6 +112,10 @@ namespace Cloud5mins.Function
                     await badRequest.WriteAsJsonAsync(new  { Message = $"{input.Url} is not a valid absolute Url. The Url parameter must start with 'http://' or 'http://'."} );    
                     return badRequest;   
                 }
+
+                string pattern = @"^https?://(learn|azure)\.microsoft\.com$";
+                string replacement = "$0?ocid=AID3050101";
+                input.Url = Regex.Replace(input.Url, pattern, replacement);
 
                 StorageTableHelper stgHelper = new StorageTableHelper(_adminApiSettings.UlsDataStorage);
 

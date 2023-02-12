@@ -29,6 +29,7 @@ using System.Net;
 using System.IO;
 using System.Text.Json;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 using Cloud5mins.domain;
 using Cloud5mins.AzShortener;
@@ -101,6 +102,10 @@ namespace Cloud5mins.Function
                 StorageTableHelper stgHelper = new StorageTableHelper(_adminApiSettings.UlsDataStorage);
 
                 string longUrl = input.Url.Trim();
+                string pattern = @"^https?://(learn|azure)\.microsoft\.com$";
+                string replacement = "$0?ocid=AID3050101";
+                longUrl = Regex.Replace(longUrl, pattern, replacement);
+
                 string vanity = string.IsNullOrWhiteSpace(input.Vanity) ? "" : input.Vanity.Trim();
                 string title = string.IsNullOrWhiteSpace(input.Title) ? "" : input.Title.Trim();
 
