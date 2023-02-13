@@ -109,7 +109,7 @@ namespace Cloud5mins.Function
                     NameValueCollection query = HttpUtility.ParseQueryString(uriBuilder.Query);
                     query["ocid"] = "AID3050101";
                     uriBuilder.Query = query.ToString();
-                    input.Url = uriBuilder.ToString();
+                    longUrl = uriBuilder.ToString();
                 }
                 string vanity = string.IsNullOrWhiteSpace(input.Vanity) ? "" : input.Vanity.Trim();
                 string title = string.IsNullOrWhiteSpace(input.Title) ? "" : input.Title.Trim();
