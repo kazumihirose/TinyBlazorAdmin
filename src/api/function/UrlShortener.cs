@@ -35,6 +35,7 @@ using Cloud5mins.domain;
 using Cloud5mins.AzShortener;
 using System.Collections.Specialized;
 using System.Web;
+using System.Linq;
 
 namespace Cloud5mins.Function
 {
@@ -107,10 +108,13 @@ namespace Cloud5mins.Function
                 if(Regex.IsMatch(longUrl, @"^https?://(learn|azure)\.microsoft\.com$")){
                     UriBuilder uriBuilder = new UriBuilder(longUrl);
                     NameValueCollection query = HttpUtility.ParseQueryString(uriBuilder.Query);
-                    query["ocid"] = "AID3050101";
-                    uriBuilder.Query = query.ToString();
-                    longUrl = uriBuilder.ToString();
+                    if(!query.AllKeys.Contains("ocid")){
+                        query["ocid"] = "AID3050101";
+                        uriBuilder.Query = query.ToString();
+                        longUrl = uriBuilder.ToString();
+                    }
                 }
+
                 string vanity = string.IsNullOrWhiteSpace(input.Vanity) ? "" : input.Vanity.Trim();
                 string title = string.IsNullOrWhiteSpace(input.Title) ? "" : input.Title.Trim();
 

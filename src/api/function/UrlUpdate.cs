@@ -49,6 +49,7 @@ using System.Threading;
 using System.Text.RegularExpressions;
 using System.Collections.Specialized;
 using System.Web;
+using System.Linq;
 
 namespace Cloud5mins.Function
 {
@@ -119,9 +120,11 @@ namespace Cloud5mins.Function
                 if(Regex.IsMatch(input.Url, @"^https?://(learn|azure)\.microsoft\.com$")){
                     UriBuilder uriBuilder = new UriBuilder(input.Url);
                     NameValueCollection query = HttpUtility.ParseQueryString(uriBuilder.Query);
-                    query["ocid"] = "AID3050101";
-                    uriBuilder.Query = query.ToString();
-                    input.Url = uriBuilder.ToString();
+                    if(!query.AllKeys.Contains("ocid")){
+                        query["ocid"] = "AID3050101";
+                        uriBuilder.Query = query.ToString();
+                        input.Url = uriBuilder.ToString();
+                    }
                 }
 
                 StorageTableHelper stgHelper = new StorageTableHelper(_adminApiSettings.UlsDataStorage);
