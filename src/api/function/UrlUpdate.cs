@@ -117,7 +117,7 @@ namespace Cloud5mins.Function
                 }
 
                 input.Url = input.Url.Trim();
-                if(Regex.IsMatch(input.Url, @"^https?://(learn|azure)\.microsoft\.com$")){
+                if(Regex.IsMatch(input.Url, @"^https?://(teams|msevents|learn|azure)\.microsoft\.com$")){
                     UriBuilder uriBuilder = new UriBuilder(input.Url);
                     NameValueCollection query = HttpUtility.ParseQueryString(uriBuilder.Query);
                     if(!query.AllKeys.Contains("ocid")){

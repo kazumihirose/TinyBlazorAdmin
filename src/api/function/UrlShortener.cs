@@ -105,7 +105,7 @@ namespace Cloud5mins.Function
                 StorageTableHelper stgHelper = new StorageTableHelper(_adminApiSettings.UlsDataStorage);
 
                 string longUrl = input.Url.Trim();
-                if(Regex.IsMatch(longUrl, @"^https?://(learn|azure)\.microsoft\.com$")){
+                if(Regex.IsMatch(longUrl, @"^https?://(teams|msevents|learn|azure)\.microsoft\.com$")){
                     UriBuilder uriBuilder = new UriBuilder(longUrl);
                     NameValueCollection query = HttpUtility.ParseQueryString(uriBuilder.Query);
                     if(!query.AllKeys.Contains("ocid")){
